@@ -20,7 +20,7 @@ const sliders = 130;
 const stews = 0;
 const blankets = 0;
 const banquets = 5;
-const dungeonCost = 2350000;
+const dungeonCost = 2300000;
 const cagebaitPlayers = "cagepole sitta,bombastus,stupidsexyflanders,ricardos3";
 const bosskillers = "phillanthropist";
 
@@ -162,11 +162,10 @@ for (const player of playerTable.keys()) {
           print(`${player} gets ${s} ${stuff[0]}`);
         }
       }
-      /*
+
       if (player.toLowerCase() !== myName().toLowerCase()) {
         Kmail.send(`${player}`, `you owe ${meatOwed}`, loot);
       }
-*/
     }
   }
 }
