@@ -78,8 +78,10 @@ for (const element of lines) {
       print(`${nn1} spent ${tt1} useful turns in the sewers`);
 
       // grab the current number of turns assigned to the player
-      let addturns = playerTable.get(nn1);
 
+      let addturns = 0;
+      addturns = playerTable.get(nn1) as number;
+      if (addturns === undefined) throw `Something went wrong getting sewer turns for ${nn1}`;
       // add the useful sewer turns to player's total turns and put that number in the map
       addturns += tt1;
       print(`${addturns}`);
@@ -114,7 +116,9 @@ for (const n of lines2) {
 
       // now we use add the turns to that player's entry in the player table
       if (justTurns) {
-        let addturns = playerTable.get(justName);
+        let addturns = playerTable.get(justName) as number;
+        if (addturns === undefined)
+          throw `Something went wrong getting non-sewer turns for ${justName}`;
         addturns += parseInt(justTurns);
         playerTable.set(justName, addturns);
       }
