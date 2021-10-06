@@ -14,6 +14,8 @@ module.exports = {
     //  "main-script-name": "./src/main.ts",
     mannyDistro: "./src/mannyDistro.ts",
     dungeonTest: "./src/test.ts",
+    bossLootDistro: "./src/bossLootDistro.ts",
+    mannyDistro2: "./src/mannyDistro2.ts",
   },
   // Turns on tree-shaking and minification in the default Terser minifier
   // https://webpack.js.org/plugins/terser-webpack-plugin/

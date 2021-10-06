@@ -1,6 +1,3 @@
-import { print, visitUrl } from "kolmafia";
-
-import { getHoboRunners } from "./lib";
 /*
 const testMap = new Map();
 testMap.set($item`Angry Farmer candy`, 1);
@@ -20,10 +17,11 @@ for (const l of kmails) {
   }
 }
 */
-const playerTable = getHoboRunners(visitUrl("clan_raidlogs.php"));
 
-for (const key of playerTable.keys()) {
-  print(`${key}`);
-  const foo = playerTable.get(key);
-  print(`${foo}`);
-}
+// import player table, grab total turns, come up with percentage for drops per, then iterate through.
+
+// while i <= 4, distro to player1, while <= 6 distro to player2, i++.
+/*
+mapToFile(bosslootclean, "md_datatest.txt");
+print("all done");
+*/

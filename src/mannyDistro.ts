@@ -1,9 +1,8 @@
 import { myName, print, visitUrl } from "kolmafia";
 import { $item, Kmail } from "libram";
-import { getHoboRunners } from "./lib";
+import {} from "./lib";
+import { getHoboRunners, getName, getTurns } from "./parsers";
 
-const getTurns = /\((\d+) turns?\)/m;
-const getName = /([\w\s_]+) \(#(\d+)\)/m;
 const page = visitUrl("clan_raidlogs.php");
 const hoboStart = page.indexOf("<div id='Hobopolis'>");
 const hoboLog = page.slice(hoboStart + 52, page.indexOf("<p><b>Loot Distribution:</b>", hoboStart));
@@ -11,6 +10,7 @@ const l = page.indexOf("<b>Sewers:</b><blockquote>");
 const sewerLog = page.slice(l, page.indexOf("</blockquote>", l));
 const nonSewerLog = hoboLog.replace(sewerLog, "");
 const playerTable = getHoboRunners(page);
+
 // TODO: make this part less stupid. probably needs to be configurable. or parse the BKer kmail, which seems hard.
 const forks = 124;
 const mugs = 127;
@@ -65,27 +65,27 @@ for (const element of lines) {
     // only care about the grates and valves here, so skip all other lines
     if (element.includes("sewer grate") || element.includes("lowered the water level")) {
       // isolate name from string
-      const n = getName.exec(element);
+      const name = getName.exec(element);
 
       // isolate turns from string
-      const t = getTurns.exec(element);
+      const turns = getTurns.exec(element);
 
       // pull out just the playername, no player id
-      const nn1 = n ? n[1] : "";
+      const justName = name ? name[1] : "";
 
       // pull out just the number of turns and make it a number
-      const tt1 = parseInt(t ? t[1] : "");
-      print(`${nn1} spent ${tt1} useful turns in the sewers`);
+      const justTurns = parseInt(turns ? turns[1] : "");
+      print(`${justTurns} spent ${justTurns} useful turns in the sewers`);
 
       // grab the current number of turns assigned to the player
 
-      let addturns = 0;
-      addturns = playerTable.get(nn1) as number;
-      if (addturns === undefined) throw `Something went wrong getting sewer turns for ${nn1}`;
+      // let addturns = 0;
+      let addturns = playerTable.get(justName) as number;
+      if (addturns === undefined) throw `Something went wrong getting sewer turns for ${name}`;
       // add the useful sewer turns to player's total turns and put that number in the map
-      addturns += tt1;
+      addturns += justTurns;
       print(`${addturns}`);
-      playerTable.set(nn1, addturns);
+      playerTable.set(justName, addturns);
     }
   }
 }
@@ -96,7 +96,7 @@ for (const key of playerTable.keys()) {
   print(`${foo}`);
 }
 
-// chop the log into single line chunks
+// chop the rest of the log into single line chunks
 const lines2 = nonSewerLog.split("<br>");
 
 for (const n of lines2) {
@@ -163,12 +163,12 @@ for (const player of playerTable.keys()) {
           const s = Math.round(stuff[1] * p);
           // const i = stuff[0];
           loot.set(stuff[0], s);
-          print(`${player} gets ${s} ${stuff[0]}`);
+          print(`${player} gets ${s} ${stuff[0]} and owes ${meatOwed}`);
         }
       }
-
       if (player.toLowerCase() !== myName().toLowerCase()) {
-        Kmail.send(`${player}`, `you owe ${meatOwed}`, loot);
+        // Kmail.send(`${player}`, `you owe ${meatOwed}`, loot);
+        print("just testing things, carry on");
       }
     }
   }

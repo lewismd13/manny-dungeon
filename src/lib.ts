@@ -1,82 +1,97 @@
-import { print } from "kolmafia";
+import { print, visitUrl } from "kolmafia";
+import { $item, Dreadsylvania } from "libram";
 
-export function getHoboRunners(raidlog: string): Map<string, number> {
-  // const raidlog = visitUrl("clan_raidlogs.php");
-  const getName = /([\w\s_]+) \(#(\d+)\)/gm;
-  const hoboStart = raidlog.indexOf("<div id='Hobopolis'>");
-  const hoboLog = raidlog.slice(
-    hoboStart + 52,
-    raidlog.indexOf("<p><b>Loot Distribution:</b>", hoboStart)
-  );
-  const playerNames = hoboLog.match(getName);
-  const uniq = [...new Set(playerNames)];
-  const playerTable = new Map();
-  uniq.forEach((element) => {
-    if (element) {
-      const newElement = element.toString();
-      const n = String(newElement.slice(0, newElement.indexOf(` (#`)));
-      playerTable.set(n, 0);
+export const raidlog = visitUrl("clan_raidlogs.php");
+
+export const forks = 124;
+export const mugs = 127;
+export const juice = 132;
+export const snuff = 124;
+export const sliders = 130;
+export const stews = 0;
+export const blankets = 0;
+export const banquets = 5;
+export const dungeonCost = 2300000;
+export const cagebaitPlayers = "cagepole sitta,bombastus,stupidsexyflanders,ricardos3";
+export const bosskillers = "phillanthropist";
+
+export const consumables = new Map([
+  [$item`Ol' Scratch's salad fork`, forks],
+  [$item`Frosty's frosty mug`, mugs],
+  [$item`jar of fermented pickle juice`, juice],
+  [$item`voodoo snuff`, snuff],
+  [$item`extra-greasy slider`, sliders],
+  [$item`frozen banquet`, banquets],
+  [$item`tin cup of mulligan stew`, stews],
+  [$item`Hodgman's blanket`, blankets],
+]);
+
+export function bossLootDistro(playerTable: Map<string, number>): void {
+  const page = visitUrl("clan_basement.php");
+  const lootListRegexp = /(?:descitem\(\d*?\).*?<b>)(.*?)(?:<\/b>)/gm;
+
+  const bossloot2 = page.match(lootListRegexp);
+  const bosslootclean = new Array<Item>();
+
+  if (bossloot2) {
+    for (const i of bossloot2) {
+      const k = i.slice(i.indexOf("<b>") + 3, i.indexOf("</b>"));
+      print(`${k}`);
+      // if (Hobopolis.loot.includes(Item.get(k))) bosslootclean.push(Item.get(k));
+      if (Dreadsylvania.loot.includes(Item.get(k))) bosslootclean.push(Item.get(k));
     }
-  });
-  return playerTable;
-}
+  }
 
-export function getSewerLog(raidlog: string): string {
-  const l = raidlog.indexOf("<b>Sewers:</b><blockquote>");
-  const sewerLog = raidlog.slice(l, raidlog.indexOf("</blockquote>", l));
-  return sewerLog;
-}
+  if (bossloot2 !== null) print(bossloot2?.toString());
+  print(bosslootclean.toString());
 
-export function gethoboLog(raidlog: string): string {
-  const hoboStart = raidlog.indexOf("<div id='Hobopolis'>");
-  const hoboLog = raidlog.slice(
-    hoboStart + 52,
-    raidlog.indexOf("<p><b>Loot Distribution:</b>", hoboStart)
-  );
-  return hoboLog;
-}
+  const lootTotal = bosslootclean.length;
 
-export function getSewerTurns(
-  sewerLog: string,
-  playerTable: Map<string, number>
-): Map<string, number> {
-  const lines = sewerLog.split("<br>");
-  const getTurns = /\((\d+) turns?\)/m;
-  const getName = /([\w\s_]+) \(#(\d+)\)/m;
-  // lines = lines.filter(String);
+  print(`total of ${lootTotal} pieces of loot`);
 
-  // parse the sewer log line by line
-  for (const element of lines) {
-    // check to make sure there's something there first
-    if (element) {
-      // only care about the grates and valves here, so skip all other lines
-      if (element.includes("sewer grate") || element.includes("lowered the water level")) {
-        // isolate name from string
-        const name = getName.exec(element);
+  let totalTurns = 0;
 
-        // isolate turns from string
-        const turns = getTurns.exec(element);
+  for (const p of playerTable.keys()) {
+    const turns = playerTable.get(p);
+    if (turns !== undefined) totalTurns += turns;
+  }
 
-        // pull out just the playername, no player id
-        const justName = name ? name[1] : "";
+  print(`total useful turns of ${totalTurns}`);
+  let bossLootCounter = 0;
 
-        // pull out just the number of turns and make it a number
-        const justTurns = parseInt(turns ? turns[1] : "");
-        print(`${justTurns} spent ${justTurns} useful turns in the sewers`);
+  for (const player of playerTable.keys()) {
+    const turns = playerTable.get(player);
+    if (turns !== undefined) {
+      const percentage = turns / totalTurns;
+      const lootShare = Math.round(percentage * lootTotal);
+      const lootShareRaw = percentage * lootTotal;
+      print(
+        `${player} spent ${turns} useful turns of ${totalTurns} total turns for ${lootShareRaw} raw or ${lootShare} rounded pieces of the total ${lootTotal} pieces of boss loot. I hope this math works out.`
+      );
 
-        // grab the current number of turns assigned to the player
-
-        // let addturns = 0;
-        let addturns = playerTable.get(justName) as number;
-        if (addturns === undefined) throw `Something went wrong getting sewer turns for ${name}`;
-        // add the useful sewer turns to player's total turns and put that number in the map
-        addturns += justTurns;
-        print(`${addturns}`);
-        playerTable.set(justName, addturns);
+      for (let i = 0; i < lootShare; i++) {
+        print(`${lootShare}`);
+        print(`${i}`);
+        // Hobopolis.distribute(player, bosslootclean[bossLootCounter]);
+        print(
+          `distributing zero-indexed item number ${bossLootCounter}, which is ${bosslootclean[bossLootCounter]}`
+        );
+        bossLootCounter++;
       }
     }
   }
-  return playerTable;
+}
+
+export function getTotalUsefulTurns(playerTable: Map<string, number>): number {
+  let totalUseful = 0;
+  playerTable.forEach((value, key) => {
+    const n = playerTable.get(key);
+    if (!cagebaitPlayers.includes(key.toLowerCase()) && !bosskillers.includes(key.toLowerCase())) {
+      print(`${key} was responsible for ${n} useful turns`);
+      if (n) totalUseful += n;
+    }
+  });
+  return totalUseful;
 }
 
 // export function bossLoot(playerTable: Map<string, number>, drops: number) {}
