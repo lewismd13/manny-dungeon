@@ -98,16 +98,20 @@ export function getSewerTurns(
 }
 
 export function getHoboRunners(raidlog: string): Map<string, number> {
-  // const raidlog = visitUrl("clan_raidlogs.php");
-  const getName = /([\w\s_]+) \(#(\d+)\)/gm;
+  // figure out where the hobopolis section starts
   const hoboStart = raidlog.indexOf("<div id='Hobopolis'>");
+  // chop out the hobopolis section
   const hoboLog = raidlog.slice(
     hoboStart + 52,
     raidlog.indexOf("<p><b>Loot Distribution:</b>", hoboStart)
   );
+  // pull everything that looks like a name out of the log
   const playerNames = hoboLog.match(getName);
+  // eliminate duplicates
   const uniq = [...new Set(playerNames)];
-  const playerTable = new Map();
+  // create the map that we want to end up with for names and turns and drop in the names, with turns set to 0
+  const playerTable = new Map<string, number>();
+  // TODO: use for...of here
   uniq.forEach((element) => {
     if (element) {
       const newElement = element.toString();
@@ -124,6 +128,7 @@ export function getHoboRunners(raidlog: string): Map<string, number> {
   return playerTable;
 }
 
+// this just finds the section of the raidlog that is for sewers only and pull it into a separate string
 export function getSewerLog(raidlog: string): string {
   const l = raidlog.indexOf("<b>Sewers:</b><blockquote>");
   const sewerLog = raidlog.slice(l, raidlog.indexOf("</blockquote>", l));
