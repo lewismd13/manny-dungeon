@@ -1,5 +1,5 @@
 import { print, visitUrl } from "kolmafia";
-import { $item, Dreadsylvania } from "libram";
+import { $item, Hobopolis } from "libram";
 
 export const raidlog = visitUrl("clan_raidlogs.php");
 
@@ -37,8 +37,8 @@ export function bossLootDistro(playerTable: Map<string, number>): void {
     for (const i of bossloot2) {
       const k = i.slice(i.indexOf("<b>") + 3, i.indexOf("</b>"));
       print(`${k}`);
-      // if (Hobopolis.loot.includes(Item.get(k))) bosslootclean.push(Item.get(k));
-      if (Dreadsylvania.loot.includes(Item.get(k))) bosslootclean.push(Item.get(k));
+      if (Hobopolis.loot.includes(Item.get(k))) bosslootclean.push(Item.get(k));
+      // if (Dreadsylvania.loot.includes(Item.get(k))) bosslootclean.push(Item.get(k));
     }
   }
 
@@ -60,23 +60,28 @@ export function bossLootDistro(playerTable: Map<string, number>): void {
   let bossLootCounter = 0;
 
   for (const player of playerTable.keys()) {
-    const turns = playerTable.get(player);
-    if (turns !== undefined) {
-      const percentage = turns / totalTurns;
-      const lootShare = Math.round(percentage * lootTotal);
-      const lootShareRaw = percentage * lootTotal;
-      print(
-        `${player} spent ${turns} useful turns of ${totalTurns} total turns for ${lootShareRaw} raw or ${lootShare} rounded pieces of the total ${lootTotal} pieces of boss loot. I hope this math works out.`
-      );
-
-      for (let i = 0; i < lootShare; i++) {
-        print(`${lootShare}`);
-        print(`${i}`);
-        // Hobopolis.distribute(player, bosslootclean[bossLootCounter]);
+    if (
+      !cagebaitPlayers.includes(player.toLowerCase()) &&
+      !bosskillers.includes(player.toLowerCase())
+    ) {
+      const turns = playerTable.get(player);
+      if (turns !== undefined) {
+        const percentage = turns / totalTurns;
+        const lootShare = Math.round(percentage * lootTotal);
+        const lootShareRaw = percentage * lootTotal;
         print(
-          `distributing zero-indexed item number ${bossLootCounter}, which is ${bosslootclean[bossLootCounter]}`
+          `${player} spent ${turns} useful turns of ${totalTurns} total turns for ${lootShareRaw} raw or ${lootShare} rounded pieces of the total ${lootTotal} pieces of boss loot. I hope this math works out.`
         );
-        bossLootCounter++;
+
+        for (let i = 0; i < lootShare; i++) {
+          print(`${lootShare}`);
+          print(`${i}`);
+          Hobopolis.distribute(player, bosslootclean[bossLootCounter]);
+          print(
+            `distributing zero-indexed item number ${bossLootCounter}, which is ${bosslootclean[bossLootCounter]}`
+          );
+          bossLootCounter++;
+        }
       }
     }
   }
