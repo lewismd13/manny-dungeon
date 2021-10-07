@@ -1,4 +1,5 @@
 import { myName, print } from "kolmafia";
+import { Kmail } from "libram";
 import {
   bosskillers,
   cagebaitPlayers,
@@ -49,8 +50,8 @@ for (const player of playerTable.keys()) {
         }
       }
       if (player !== myName().toLowerCase()) {
-        // Kmail.send(`${player}`, `you owe ${meatOwed}`, loot);
-        print("just testing things, carry on");
+        Kmail.send(`${player}`, `you owe ${meatOwed}`, loot);
+        // print("just testing things, carry on");
       }
     }
   }
