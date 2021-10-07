@@ -1,4 +1,4 @@
-import { print, visitUrl } from "kolmafia";
+import { getPlayerId, print, visitUrl } from "kolmafia";
 import { $item, Hobopolis } from "libram";
 
 export const raidlog = visitUrl("clan_raidlogs.php");
@@ -76,7 +76,8 @@ export function bossLootDistro(playerTable: Map<string, number>): void {
         for (let i = 0; i < lootShare; i++) {
           print(`${lootShare}`);
           print(`${i}`);
-          Hobopolis.distribute(player, bosslootclean[bossLootCounter]);
+
+          Hobopolis.distribute(parseInt(getPlayerId(player)), bosslootclean[bossLootCounter]);
           print(
             `distributing zero-indexed item number ${bossLootCounter}, which is ${bosslootclean[bossLootCounter]}`
           );
