@@ -53,8 +53,8 @@ export function getSewerTurns(
   playerTable: Map<string, number>
 ): Map<string, number> {
   const lines = sewerLog.split("<br>");
-  const getTurns = /\((\d+) turns?\)/m;
-  const getName = /([\w\s_]+) \(#(\d+)\)/m;
+  // const getTurns = /\((\d+) turns?\)/m;
+  // const getName = /([\w\s_]+) \(#(\d+)\)/m;
   // lines = lines.filter(String);
 
   // parse the sewer log line by line
@@ -99,6 +99,7 @@ export function getSewerTurns(
 
 export function getHoboRunners(raidlog: string): Map<string, number> {
   // figure out where the hobopolis section starts
+  const getName2 = /([\w\s_]+) \(#(\d+)\)/gm;
   const hoboStart = raidlog.indexOf("<div id='Hobopolis'>");
   // chop out the hobopolis section
   const hoboLog = raidlog.slice(
@@ -106,11 +107,11 @@ export function getHoboRunners(raidlog: string): Map<string, number> {
     raidlog.indexOf("<p><b>Loot Distribution:</b>", hoboStart)
   );
   // pull everything that looks like a name out of the log
-  const playerNames = hoboLog.match(getName);
+  const playerNames = hoboLog.match(getName2);
   // eliminate duplicates
   const uniq = [...new Set(playerNames)];
   // create the map that we want to end up with for names and turns and drop in the names, with turns set to 0
-  const playerTable = new Map<string, number>();
+  const playerTable = new Map();
   // TODO: use for...of here
   uniq.forEach((element) => {
     if (element) {
