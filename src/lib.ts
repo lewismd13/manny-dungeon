@@ -1,4 +1,4 @@
-import { print, visitUrl } from "kolmafia";
+import { getPlayerId, print, visitUrl } from "kolmafia";
 import { $item, Hobopolis } from "libram";
 
 export const raidlog = visitUrl("clan_raidlogs.php");
@@ -53,7 +53,8 @@ export function bossLootDistro(playerTable: Map<string, number>): void {
 
   for (const p of playerTable.keys()) {
     const turns = playerTable.get(p);
-    if (turns !== undefined) totalTurns += turns;
+    if (turns !== undefined && !cagebaitPlayers.includes(p) && !bosskillers.includes(p))
+      totalTurns += turns;
   }
 
   print(`total useful turns of ${totalTurns}`);
@@ -72,11 +73,13 @@ export function bossLootDistro(playerTable: Map<string, number>): void {
         print(
           `${player} spent ${turns} useful turns of ${totalTurns} total turns for ${lootShareRaw} raw or ${lootShare} rounded pieces of the total ${lootTotal} pieces of boss loot. I hope this math works out.`
         );
-
+        // TODO: figure out a way to do rounding tiebreakers
+        // tally up lootShareRaw - lootShare for each player and the extra piece goes to whoever has the highest number
         for (let i = 0; i < lootShare; i++) {
           print(`${lootShare}`);
           print(`${i}`);
-          Hobopolis.distribute(player, bosslootclean[bossLootCounter]);
+
+          // Hobopolis.distribute(parseInt(getPlayerId(player)), bosslootclean[bossLootCounter]);
           print(
             `distributing zero-indexed item number ${bossLootCounter}, which is ${bosslootclean[bossLootCounter]}`
           );
