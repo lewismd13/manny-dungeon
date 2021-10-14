@@ -3,11 +3,11 @@ import { $item, Hobopolis } from "libram";
 
 export const raidlog = visitUrl("clan_raidlogs.php");
 
-export const forks = 124;
-export const mugs = 127;
-export const juice = 132;
-export const snuff = 124;
-export const sliders = 130;
+export const forks = 143;
+export const mugs = 147;
+export const juice = 151;
+export const snuff = 143;
+export const sliders = 150;
 export const stews = 0;
 export const blankets = 0;
 export const banquets = 5;
