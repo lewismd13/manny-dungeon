@@ -13,10 +13,11 @@ import {
 } from "../lib";
 
 const page = `<section class="manny-dungeon">
+
 <h1>Manny Dungeon Settings</h1>
 <p><b>Consumables</b></p>
 
-<form submit="post" type="submit" action="/mannydungeon/mdrelay.js">
+<form submit="post" type="submit">
   <div class="input-group">
     <label for="forks">Forks</label>
     <input id="forks" name="forks" type="number" value="${forks}" />
@@ -85,4 +86,5 @@ function doStuff() {
     print(`${thing} and ${stuff2.get(thing)}`);
   }
 }
+
 write(page);
