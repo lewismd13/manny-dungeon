@@ -1,5 +1,5 @@
-import { myName, print } from "kolmafia";
-import { Kmail } from "libram";
+import { itemAmount, myName, print } from "kolmafia";
+import { $item, Kmail } from "libram";
 import {
   bosskillers,
   cagebaitPlayers,
@@ -7,6 +7,7 @@ import {
   dungeonCost,
   getTotalUsefulTurns,
   raidlog,
+  sliders,
 } from "./lib";
 import { getHoboRunners, getNonSewerTurns, getSewerLog, getSewerTurns } from "./parsers";
 
@@ -27,6 +28,12 @@ for (const key of playerTable.keys()) {
 const totalUseful = getTotalUsefulTurns(playerTable);
 
 print(`this run had ${totalUseful} total useful turns.`);
+
+// TODO: add a check to make sure you have all the loot in your inventory
+
+if (itemAmount($item`extra-greasy slider`) < sliders) {
+  throw "You don't have enough sliders in your inventory";
+}
 
 for (const player of playerTable.keys()) {
   if (
