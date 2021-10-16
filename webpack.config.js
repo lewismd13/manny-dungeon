@@ -18,6 +18,7 @@ module.exports = {
     mannyDistro2: "./src/mannyDistro2.ts",
     mdrelay: "./src/relay/mdrelay.ts",
     relay_mannydungeon: "./src/relay/relay_mannydungeon.ts",
+    md: "./src/main.ts",
   },
   // Turns on tree-shaking and minification in the default Terser minifier
   // https://webpack.js.org/plugins/terser-webpack-plugin/
