@@ -1,7 +1,18 @@
-import { getPlayerId, print, pullsRemaining, visitUrl } from "kolmafia";
+import { getPlayerId, print, visitUrl } from "kolmafia";
 import { $item, Dreadsylvania, Hobopolis } from "libram";
+import { globalOptions } from "./globalvars";
 
 export const raidlog = visitUrl("clan_raidlogs.php");
+
+export function printHelpMenu(): void {
+  print("Use the following arguments to run manny-dungeon");
+  print("consumables: distribute the consumable drops that you hopefully got from a bosskiller");
+  print("bossloot: distribute the boss drops (outfits and the like)");
+  print(
+    "sim: simulate only (use in conjuction with bossloot or consumables to simulate distribution without actually doing distro)"
+  );
+  print("random: roll a random number and compare to turns spent and display the result");
+}
 
 export const forks = 143;
 export const mugs = 147;
@@ -113,8 +124,8 @@ export function bossLootDistroRevised(playerTable: Map<string, number>): void {
     for (const i of bossloot2) {
       const k = i.slice(i.indexOf("<b>") + 3, i.indexOf("</b>"));
       print(`${k}`);
-      // if (Hobopolis.loot.includes(Item.get(k))) bosslootclean.push(Item.get(k));
-      if (Dreadsylvania.loot.includes(Item.get(k))) bosslootclean.push(Item.get(k));
+      if (Hobopolis.loot.includes(Item.get(k))) bosslootclean.push(Item.get(k));
+      // if (Dreadsylvania.loot.includes(Item.get(k))) bosslootclean.push(Item.get(k));
     }
   }
 
@@ -152,12 +163,12 @@ export function bossLootDistroRevised(playerTable: Map<string, number>): void {
         print(
           `${player} spent ${turns} useful turns of ${totalTurns} total turns for ${lootShare} pieces of the total ${lootTotal} pieces of boss loot, with a remainder of ${remainder}. I hope this math works out.`
         );
-        // TODO: figure out a way to do rounding tiebreakers
         for (let i = 0; i < lootShare; i++) {
           print(`${lootShare}`);
           print(`${i}`);
-
-          // Hobopolis.distribute(parseInt(getPlayerId(player)), bosslootclean[bossLootCounter]);
+          if (globalOptions.sim === false) {
+            Hobopolis.distribute(parseInt(getPlayerId(player)), bosslootclean[bossLootCounter]);
+          }
           print(
             `distributing zero-indexed item number ${bossLootCounter}, which is ${bosslootclean[bossLootCounter]}`
           );
@@ -175,7 +186,9 @@ export function bossLootDistroRevised(playerTable: Map<string, number>): void {
           `${player} has the highest remainder and gets zero-indexed item ${bossLootCounter}, which is ${bosslootclean[bossLootCounter]}`
         );
         lootRemainders.set(player, 0);
-        // Hobopolis.distribute(parseInt(getPlayerId(player)), bosslootclean[bossLootCounter]);
+        if (globalOptions.sim === false) {
+          Hobopolis.distribute(parseInt(getPlayerId(player)), bosslootclean[bossLootCounter]);
+        }
       }
     }
     bossLootCounter++;
