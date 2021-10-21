@@ -1,4 +1,4 @@
-import { print } from "kolmafia";
+import { print, visitUrl } from "kolmafia";
 
 export const getTurns = /\((\d+) turns?\)/m;
 export const getName = /([\w\s_]+) \(#(\d+)\)/m;
@@ -143,4 +143,24 @@ export function gethoboLog(raidlog: string): string {
     raidlog.indexOf("<p><b>Loot Distribution:</b>", hoboStart)
   );
   return hoboLog;
+}
+
+export function esplanade(): void {
+  const raidlog = visitUrl("clan_raidlogs.php");
+  const pipeRegExp = /broke \d* water pipes \(\d* turns\)/g;
+
+  function pipesBroken() {
+    const pipematch = raidlog.match(pipeRegExp);
+    let pipes;
+    if (pipematch === null) {
+      pipes = 0;
+      return pipes;
+    } else {
+      pipes = pipematch.toString();
+      pipes = parseInt(pipes.slice(6, pipes.indexOf(" pipes")));
+      return pipes;
+    }
+  }
+
+  print(`${pipesBroken()}`);
 }

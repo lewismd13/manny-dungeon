@@ -1,13 +1,24 @@
-import { getPlayerId, print, visitUrl } from "kolmafia";
+import { print, visitUrl } from "kolmafia";
 import { $item, Hobopolis } from "libram";
+import { globalOptions } from "./globalvars";
 
 export const raidlog = visitUrl("clan_raidlogs.php");
 
-export const forks = 124;
-export const mugs = 127;
-export const juice = 132;
-export const snuff = 124;
-export const sliders = 130;
+export function printHelpMenu(): void {
+  print("Use the following arguments to run manny-dungeon");
+  print("consumables: distribute the consumable drops that you hopefully got from a bosskiller");
+  print("bossloot: distribute the boss drops (outfits and the like)");
+  print(
+    "sim: simulate only (use in conjuction with bossloot or consumables to simulate distribution without actually doing distro)"
+  );
+  print("random: roll a random number and compare to turns spent and display the result");
+}
+
+export const forks = 143;
+export const mugs = 147;
+export const juice = 151;
+export const snuff = 143;
+export const sliders = 150;
 export const stews = 0;
 export const blankets = 0;
 export const banquets = 5;
@@ -26,25 +37,30 @@ export const consumables = new Map([
   [$item`Hodgman's blanket`, blankets],
 ]);
 
-export function bossLootDistro(playerTable: Map<string, number>): void {
-  const page = visitUrl("clan_basement.php");
-  const lootListRegexp = /(?:descitem\(\d*?\).*?<b>)(.*?)(?:<\/b>)/gm;
+export function getTotalUsefulTurns(playerTable: Map<string, number>): number {
+  let totalUseful = 0;
+  playerTable.forEach((value, key) => {
+    const n = playerTable.get(key);
+    if (!cagebaitPlayers.includes(key.toLowerCase()) && !bosskillers.includes(key.toLowerCase())) {
+      print(`${key} was responsible for ${n} useful turns`);
+      if (n) totalUseful += n;
+    }
+  });
+  return totalUseful;
+}
 
-  const bossloot2 = page.match(lootListRegexp);
+export function bossLootDistro(playerTable: Map<string, number>): void {
+  const allLoot = Hobopolis.findLoot();
   const bosslootclean = new Array<Item>();
 
-  if (bossloot2) {
-    for (const i of bossloot2) {
-      const k = i.slice(i.indexOf("<b>") + 3, i.indexOf("</b>"));
-      print(`${k}`);
-      if (Hobopolis.loot.includes(Item.get(k))) bosslootclean.push(Item.get(k));
-      // if (Dreadsylvania.loot.includes(Item.get(k))) bosslootclean.push(Item.get(k));
+  for (const check of allLoot.keys()) {
+    const loot = allLoot.get(check);
+    if (loot !== undefined) {
+      if (loot > 0) {
+        bosslootclean.push(check);
+      }
     }
   }
-
-  if (bossloot2 !== null) print(bossloot2?.toString());
-  print(bosslootclean.toString());
-
   const lootTotal = bosslootclean.length;
 
   print(`total of ${lootTotal} pieces of loot`);
@@ -59,6 +75,7 @@ export function bossLootDistro(playerTable: Map<string, number>): void {
 
   print(`total useful turns of ${totalTurns}`);
   let bossLootCounter = 0;
+  const lootRemainders = new Map<string, number>();
 
   for (const player of playerTable.keys()) {
     if (
@@ -68,18 +85,19 @@ export function bossLootDistro(playerTable: Map<string, number>): void {
       const turns = playerTable.get(player);
       if (turns !== undefined) {
         const percentage = turns / totalTurns;
-        const lootShare = Math.round(percentage * lootTotal);
+        const lootShare = Math.floor(percentage * lootTotal);
         const lootShareRaw = percentage * lootTotal;
+        const remainder = lootShareRaw - lootShare;
+        lootRemainders.set(player, remainder);
         print(
-          `${player} spent ${turns} useful turns of ${totalTurns} total turns for ${lootShareRaw} raw or ${lootShare} rounded pieces of the total ${lootTotal} pieces of boss loot. I hope this math works out.`
+          `${player} spent ${turns} useful turns of ${totalTurns} total turns for ${lootShare} pieces of the total ${lootTotal} pieces of boss loot, with a remainder of ${remainder}. I hope this math works out.`
         );
-        // TODO: figure out a way to do rounding tiebreakers
-        // tally up lootShareRaw - lootShare for each player and the extra piece goes to whoever has the highest number
         for (let i = 0; i < lootShare; i++) {
           print(`${lootShare}`);
           print(`${i}`);
-
-          // Hobopolis.distribute(parseInt(getPlayerId(player)), bosslootclean[bossLootCounter]);
+          if (globalOptions.sim === false) {
+            Hobopolis.distribute(player, bosslootclean[bossLootCounter]);
+          }
           print(
             `distributing zero-indexed item number ${bossLootCounter}, which is ${bosslootclean[bossLootCounter]}`
           );
@@ -88,18 +106,31 @@ export function bossLootDistro(playerTable: Map<string, number>): void {
       }
     }
   }
-}
-
-export function getTotalUsefulTurns(playerTable: Map<string, number>): number {
-  let totalUseful = 0;
-  playerTable.forEach((value, key) => {
-    const n = playerTable.get(key);
-    if (!cagebaitPlayers.includes(key.toLowerCase()) && !bosskillers.includes(key.toLowerCase())) {
-      print(`${key} was responsible for ${n} useful turns`);
-      if (n) totalUseful += n;
+  while (bossLootCounter < lootTotal) {
+    const highest = Math.max(...lootRemainders.values());
+    print(`${highest}`);
+    for (const player of lootRemainders.keys()) {
+      if (lootRemainders.get(player) === highest) {
+        print(
+          `${player} has the highest remainder and gets zero-indexed item ${bossLootCounter}, which is ${bosslootclean[bossLootCounter]}`
+        );
+        lootRemainders.set(player, 0);
+        if (globalOptions.sim === false) {
+          Hobopolis.distribute(player, bosslootclean[bossLootCounter]);
+        }
+      }
     }
-  });
-  return totalUseful;
+    bossLootCounter++;
+  }
+  print(`all done! (hopefully)`);
 }
 
 // export function bossLoot(playerTable: Map<string, number>, drops: number) {}
+/*
+export function getConsumables(bk: string, date: string) {
+  const kmails = Kmail.inbox();
+  for (const kmail of kmails) {
+    if (kmail.senderName.toLowerCase() === bk.toLowerCase() && kmail.date === date.toDate())
+  }
+}
+*/

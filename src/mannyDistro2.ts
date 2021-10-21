@@ -1,5 +1,5 @@
-import { myName, print } from "kolmafia";
-import { Kmail } from "libram";
+import { itemAmount, myName, print } from "kolmafia";
+import { $item, Kmail } from "libram";
 import {
   bosskillers,
   cagebaitPlayers,
@@ -28,6 +28,16 @@ const totalUseful = getTotalUsefulTurns(playerTable);
 
 print(`this run had ${totalUseful} total useful turns.`);
 
+// TODO: add a check to make sure you have all the loot in your inventory
+
+for (const loot of consumables.keys()) {
+  let howmuch = consumables.get(loot);
+  if (howmuch === undefined) howmuch = 0;
+  if (itemAmount(loot) < howmuch) {
+    throw `You don't have enough ${loot} in your inventory`;
+  }
+}
+
 for (const player of playerTable.keys()) {
   if (
     !cagebaitPlayers.includes(player.toLowerCase()) &&
@@ -50,8 +60,8 @@ for (const player of playerTable.keys()) {
         }
       }
       if (player !== myName().toLowerCase()) {
-        Kmail.send(`${player}`, `you owe ${meatOwed}`, loot);
-        // print("just testing things, carry on");
+        // Kmail.send(`${player}`, `you owe ${meatOwed}`, loot);
+        print("just testing things, carry on");
       }
     }
   }
