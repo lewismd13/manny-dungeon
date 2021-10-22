@@ -1,4 +1,4 @@
-import { bossLootDistroRevised, bossLootDistroRevisedAgain, raidlog } from "./lib";
+import { bossLootDistro, raidlog } from "./lib";
 import { getHoboRunners, getNonSewerTurns, getSewerLog, getSewerTurns } from "./parsers";
 
 // TODO: have sim and live modes
@@ -11,7 +11,7 @@ playerTable = getSewerTurns(sewerLog, playerTable);
 
 playerTable = getNonSewerTurns(raidlog, playerTable);
 
-bossLootDistroRevisedAgain(playerTable);
+bossLootDistro(playerTable);
 
 /*
 Military Dave:
