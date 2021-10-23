@@ -24,13 +24,10 @@ export function partsMatching(log: string, part: string): number {
     `gm`
   );
   const match = matchRegExp.exec(richard);
-  const parts = match ? match[1] : "";
+  const parts = match ? match[1] : "0";
   return parseInt(parts);
 }
 
-/*
-/Alium \(#\d+\)(?:\s|\w)+(?:pipes?) (?:\((\d+) turns?\))/gm
-*/
 export function getPlayerTurns(clanLog: string, name: string, action: string): number {
   const getTurns = RegExp(
     `${name} \\(#\\d+\\)(?:\\s|\\w)+(?:${action}).+?(?:\\((\\d+) turns?\\))`,
@@ -94,10 +91,23 @@ export class Esplanade {
   static totalBanquets = getActionTurns(esplanadeLog, "raided");
 }
 
+/*
+theMatcher["BB","&nbsp;Hot Hobo"] = "defeated  Hot hobo";
+theMatcher["BB","Defeats"] = "defeated by  Hot";
+theMatcher["BB","!Ol' Scratch"] = "defeated  Ol";
+theMatcher["BB","!bossloss"] = "defeated by  Ol";
+theMatcher["BB","Threw Tire"] = "on the fire";
+theMatcher["BB","Tirevalanche"] = "tirevalanche";
+theMatcher["BB","Diverted<br>Steam"] = "diverted some steam away";
+theMatcher["BB","Opened<br>Door"] = "clan coffer";
+theMatcher["BB","Burned<br>by Door"] = "hot door";
+*/
+
 export class Burnbarrel {
   static log = burnbarrelLog;
   static turns = getTotalTurns(this.log);
   static playerTable = getHoboRunners(this.log);
+  static status = "";
 
   static tiresStacked(name?: string): number {
     if (!name) return getActionTurns(this.log, "on the fire");
@@ -107,8 +117,25 @@ export class Burnbarrel {
     if (!name) return getActionTurns(this.log, "tirevalanche");
     else return getPlayerTurns(this.log, name, "tirevalanche");
   }
-  static totalDefeats(): number {
-    return getActionTurns(this.log, "defeated by");
+  static bbDefeats(name?: string): number {
+    if (!name) return getActionTurns(this.log, "defeated by  Hot hobo");
+    else return getPlayerTurns(this.log, name, "defeated by  Hot hobo");
+  }
+  static bbKills(name?: string): number {
+    if (!name) return getActionTurns(this.log, "defeated  Hot hobo");
+    else return getPlayerTurns(this.log, name, "defeated  Hot hobo");
+  }
+  static steam(name?: string): number {
+    if (!name) return getActionTurns(this.log, "diverted some steam");
+    else return getPlayerTurns(this.log, name, "diverted some steam");
+  }
+  static doors(name?: string): number {
+    if (!name) return getActionTurns(this.log, "Meat for the clan");
+    else return getPlayerTurns(this.log, name, "Meat for the clan");
+  }
+  static scratchDefeats(name?: string): number {
+    if (!name) return getActionTurns(this.log, "defeated by  Ol' Scratch");
+    else return getPlayerTurns(this.log, name, "defeated by  Ol' Scratch");
   }
 }
 
