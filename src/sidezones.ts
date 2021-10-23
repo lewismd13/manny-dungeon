@@ -16,6 +16,8 @@ const ahbg = stringLog.match(/<b>The Ancient Hobo Burial Ground:(.*?)<\/blockquo
 const ahbgLog = ahbg ? ahbg[1].toString() : "";
 const ts = stringLog.match(/<b>Town Square:(.*?)<\/blockquote>/);
 const tsLog = ts ? ts[1].toString() : "";
+const sewer = stringLog.match(/<b>Sewers:(.*?)<\/blockquote>/);
+const sewerLog = sewer ? sewer[1].toString() : "";
 
 export function partsMatching(log: string, part: string): number {
   const richard = log;
@@ -171,4 +173,45 @@ export class Richard {
   static stench = partsMatching(this.log, "guts");
   static spooky = partsMatching(this.log, "skull");
   static physical = partsMatching(this.log, "skin");
+}
+
+export class Sewers {
+  static log = sewerLog;
+  static turns = getTotalTurns(this.log);
+  static playerTable = getHoboRunners(this.log);
+
+  static kills(name?: string): number {
+    if (!name) return getActionTurns(this.log, "defeated a");
+    else return getPlayerTurns(this.log, name, "defeated a");
+  }
+
+  static grates(name?: string): number {
+    if (!name) return getActionTurns(this.log, "sewer grate");
+    else return getPlayerTurns(this.log, name, "sewer grate");
+  }
+
+  static valves(name?: string): number {
+    if (!name) return getActionTurns(this.log, "lowered the water");
+    else return getPlayerTurns(this.log, name, "lowered the water");
+  }
+
+  static tunnels(name?: string): number {
+    if (!name) return getActionTurns(this.log, "explored");
+    else return getPlayerTurns(this.log, name, "explored");
+  }
+
+  static chews(name?: string): number {
+    if (!name) return getActionTurns(this.log, "gnawed through");
+    else return getPlayerTurns(this.log, name, "gnawed through");
+  }
+
+  static clears(name?: string): number {
+    if (!name) return getActionTurns(this.log, "made it through");
+    else return getPlayerTurns(this.log, name, "made it through");
+  }
+
+  static defeats(name?: string): number {
+    if (!name) return getActionTurns(this.log, "was defeated by");
+    else return getPlayerTurns(this.log, name, "was defeated by");
+  }
 }
