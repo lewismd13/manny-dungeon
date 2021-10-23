@@ -1,3 +1,4 @@
+import { visitUrl } from "kolmafia";
 import { raidlog } from "./lib";
 import { getHoboRunners } from "./parsers";
 
@@ -13,6 +14,19 @@ const pld = stringLog.match(/<b>The Purple Light District:(.*?)<\/blockquote>/);
 const pldLog = pld ? pld[1].toString() : "";
 const ahbg = stringLog.match(/<b>The Ancient Hobo Burial Ground:(.*?)<\/blockquote>/);
 const ahbgLog = ahbg ? ahbg[1].toString() : "";
+const ts = stringLog.match(/<b>Town Square:(.*?)<\/blockquote>/);
+const tsLog = ts ? ts[1].toString() : "";
+
+export function partsMatching(log: string, part: string): number {
+  const richard = log;
+  const matchRegExp = RegExp(
+    `(?:Richard has <b>(\\d+)</b>)(?:\\s|\\w)+(?:${part}?e?s\\.\\<)`,
+    `gm`
+  );
+  const match = matchRegExp.exec(richard);
+  const parts = match ? match[1] : "";
+  return parseInt(parts);
+}
 
 /*
 /Alium \(#\d+\)(?:\s|\w)+(?:pipes?) (?:\((\d+) turns?\))/gm
@@ -114,4 +128,20 @@ export class BurialGround {
   static log = ahbgLog;
   static turns = getTotalTurns(this.log);
   static playerTable = getHoboRunners(this.log);
+}
+
+export class TownSquare {
+  static log = tsLog;
+  static turns = getTotalTurns(this.log);
+  static playerTable = getHoboRunners(this.log);
+}
+
+export class Richard {
+  static log = visitUrl("clan_hobopolis.php?place=3&action=talkrichard&whichtalk=3");
+  static hot = partsMatching(this.log, "boot");
+  static cold = partsMatching(this.log, "eye");
+  static sleaze = partsMatching(this.log, "crotch");
+  static stench = partsMatching(this.log, "guts");
+  static spooky = partsMatching(this.log, "skull");
+  static physical = partsMatching(this.log, "skin");
 }
