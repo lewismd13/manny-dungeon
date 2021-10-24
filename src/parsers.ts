@@ -1,4 +1,5 @@
 import { print, visitUrl } from "kolmafia";
+import { Kmail } from "libram";
 
 export const getTurns = /\((\d+) turns?\)/m;
 export const getName = /([\w\s_]+) \(#(\d+)\)/m;
@@ -143,6 +144,37 @@ export function gethoboLog(raidlog: string): string {
     raidlog.indexOf("<p><b>Loot Distribution:</b>", hoboStart)
   );
   return hoboLog;
+}
+
+function formatDay(n: number) {
+  return n > 9 ? `${n}` : `0${n}`;
+}
+
+function formatDateString(kmail: Kmail): string {
+  const day = kmail.date.getDate();
+  const formattedDay = formatDay(day);
+  const month = kmail.date.getMonth() + 1; // zero indexed because what
+  const formattedMonth = formatDay(month);
+  const year = kmail.date.getFullYear();
+  const datestring = year.toString() + formattedMonth + formattedDay;
+  return datestring;
+}
+// finds the kmail from bosskiller, given playername and date in YYYYMMDD format
+// TODO: handle consumables and skill/other drops separately
+// TODO: map to file a JSON representation of values
+function bkDropsUpdate(bk: string, date: string) {
+  const inbox = Kmail.inbox();
+  inbox.forEach((kmail) => {
+    const name = kmail.senderName;
+    const bkDate = formatDateString(kmail);
+    if (name.toLowerCase() === bk.toLowerCase() && date === bkDate) {
+      print("hooray! You found the kmail! Here are the drops:");
+      const lootlist = kmail.items();
+      for (const items of lootlist.keys()) {
+        print(`${name} gets ${lootlist.get(items)} of ${items}`);
+      }
+    }
+  });
 }
 
 export function esplanade(): void {
