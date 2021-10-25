@@ -56,6 +56,25 @@ function getActionTurns(clanLog: string, action: string) {
   return totalTurns;
 }
 
+export function flexibleTurns(clanLog: string, action: string, name?: string): number {
+  let getTurns;
+  if (name) {
+    getTurns = RegExp(
+      `${name} \\(#\\d+\\)(?:\\s|\\w)+(?:${action}).+?(?:\\((\\d+) turns?\\))`,
+      `gmi`
+    );
+  } else {
+    getTurns = RegExp(`(?:${action}.*?)\\((\\d+) turns?\\)`, `gm`);
+  }
+  let turns;
+  let totalTurns = 0;
+  while ((turns = getTurns.exec(clanLog)) !== null) {
+    // print(`${turns[1]} turns`);
+    totalTurns += parseInt(turns[1]);
+  }
+  return totalTurns;
+}
+
 export function getTotalTurns(clanLog: string): number {
   const getTurns = RegExp(`\\((\\d+) turns?\\)`, `gm`);
   let turns;
@@ -85,12 +104,18 @@ export class Esplanade {
   static log = esplanadeLog;
   static turns = getTotalTurns(this.log);
   static playerTable = getHoboRunners(this.log);
+
   static totalPipes = getActionTurns(esplanadeLog, "pipe");
   static totalDiverts = getActionTurns(esplanadeLog, "divert");
   static bigYodels = getActionTurns(esplanadeLog, "yodeled like crazy");
   static totalDefeats = getActionTurns(esplanadeLog, "defeated by");
   static totalKills = getActionTurns(esplanadeLog, "defeated  Cold hobo");
   static totalBanquets = getActionTurns(esplanadeLog, "raided");
+
+  static pipesMethod(name?: string): number {
+    if (!name) return getActionTurns(this.log, "pipe");
+    else return getPlayerTurns(this.log, name, "pipe");
+  }
 }
 
 /*
@@ -157,6 +182,65 @@ export class BurialGround {
   static log = ahbgLog;
   static turns = getTotalTurns(this.log);
   static playerTable = getHoboRunners(this.log);
+
+  static kills({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const ahbg = page.match(/<b>The Ancient Hobo Burial Ground:(.*?)<\/blockquote>/);
+      const ahbgLog = ahbg ? ahbg[1].toString() : "";
+      return flexibleTurns(ahbgLog, "defeated  Spooky", name);
+    } else {
+      return flexibleTurns(this.log, "defeated  Spooky", name);
+    }
+  }
+
+  static defeats({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const ahbg = page.match(/<b>The Ancient Hobo Burial Ground:(.*?)<\/blockquote>/);
+      const ahbgLog = ahbg ? ahbg[1].toString() : "";
+      return flexibleTurns(ahbgLog, "defeated by", name);
+    } else {
+      return flexibleTurns(this.log, "defeated by", name);
+    }
+  }
+
+  static dances({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const ahbg = page.match(/<b>The Ancient Hobo Burial Ground:(.*?)<\/blockquote>/);
+      const ahbgLog = ahbg ? ahbg[1].toString() : "";
+      return flexibleTurns(ahbgLog, "busted", name);
+    } else {
+      return flexibleTurns(this.log, "busted", name);
+    }
+  }
+
+  static flowers({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const ahbg = page.match(/<b>The Ancient Hobo Burial Ground:(.*?)<\/blockquote>/);
+      const ahbgLog = ahbg ? ahbg[1].toString() : "";
+      return flexibleTurns(ahbgLog, "flowers", name);
+    } else {
+      return flexibleTurns(this.log, "flowers", name);
+    }
+  }
+
+  static watchedDancers({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const ahbg = page.match(/<b>The Ancient Hobo Burial Ground:(.*?)<\/blockquote>/);
+      const ahbgLog = ahbg ? ahbg[1].toString() : "";
+      return flexibleTurns(ahbgLog, "watched", name);
+    } else {
+      return flexibleTurns(this.log, "watched", name);
+    }
+  }
+  // pry open door
+  // semirare
+  // killed zombo
+  // killed by zombo
 }
 
 export class TownSquare {
@@ -209,9 +293,39 @@ export class Sewers {
     if (!name) return getActionTurns(this.log, "made it through");
     else return getPlayerTurns(this.log, name, "made it through");
   }
+  /**
+   * Get sewer defeats
+   * @param args
+   * @param boolean [args.cache=true] should the cached log be used
+   * @param string [args.name] user to search for
+   * @returns number
+   */
+  static defeats({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const sewer = page.match(/<b>Sewers:(.*?)<\/blockquote>/);
+      const sewerLog = sewer ? sewer[1].toString() : "";
+      return flexibleTurns(sewerLog, "was defeated by", name);
+    } else {
+      return flexibleTurns(this.log, "was defeated by", name);
+    }
+  }
 
-  static defeats(name?: string): number {
-    if (!name) return getActionTurns(this.log, "was defeated by");
-    else return getPlayerTurns(this.log, name, "was defeated by");
+  /**
+   * Get goldfish log info
+   * @param args
+   * @param boolean [args.cache=true] should the cached log be used
+   * @param string [args.name] user to search for
+   * @returns number
+   */
+  static goldfish({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const sewer = page.match(/<b>Sewers:(.*?)<\/blockquote>/);
+      const sewerLog = sewer ? sewer[1].toString() : "";
+      return flexibleTurns(sewerLog, "goldfish", name);
+    } else {
+      return flexibleTurns(this.log, "goldfish", name);
+    }
   }
 }
