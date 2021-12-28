@@ -96,7 +96,7 @@ export function bossLootDistro(playerTable: Map<string, number>): void {
           print(`${lootShare}`);
           print(`${i}`);
           if (globalOptions.sim === false) {
-            Hobopolis.distribute(player, bosslootclean[bossLootCounter]);
+            // Hobopolis.distribute(player, bosslootclean[bossLootCounter]);
           }
           print(
             `distributing zero-indexed item number ${bossLootCounter}, which is ${bosslootclean[bossLootCounter]}`
@@ -116,7 +116,7 @@ export function bossLootDistro(playerTable: Map<string, number>): void {
         );
         lootRemainders.set(player, 0);
         if (globalOptions.sim === false) {
-          Hobopolis.distribute(player, bosslootclean[bossLootCounter]);
+          // Hobopolis.distribute(player, bosslootclean[bossLootCounter]);
         }
       }
     }

@@ -164,18 +164,225 @@ export class Burnbarrel {
     if (!name) return getActionTurns(this.log, "defeated by  Ol' Scratch");
     else return getPlayerTurns(this.log, name, "defeated by  Ol' Scratch");
   }
+  // burned by door, scratch kills
 }
 
 export class Heap {
   static log = heapLog;
   static turns = getTotalTurns(this.log);
   static playerTable = getHoboRunners(this.log);
+
+  /**
+   * Return number of kills in The Heap
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of kills
+   */
+  static kills({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const heap = page.match(/<b>The Heap:(.*?)<\/blockquote>/);
+      const heapLog = heap ? heap[1].toString() : "";
+      return flexibleTurns(heapLog, "defeated Stench hobo", name);
+    } else {
+      return flexibleTurns(this.log, "defeated Stench hobo", name);
+    }
+  }
+  /**
+   * Return number of trashcanoes in The Heap
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of trashcanoes
+   */
+  static trashcanoes({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const heap = page.match(/<b>The Heap:(.*?)<\/blockquote>/);
+      const heapLog = heap ? heap[1].toString() : "";
+      return flexibleTurns(heapLog, "trashcano", name);
+    } else {
+      return flexibleTurns(this.log, "trashcano", name);
+    }
+  }
+  /**
+   * Return number of compost in The Heap
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of compost
+   */
+  static compost({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const heap = page.match(/<b>The Heap:(.*?)<\/blockquote>/);
+      const heapLog = heap ? heap[1].toString() : "";
+      return flexibleTurns(heapLog, "compost", name);
+    } else {
+      return flexibleTurns(this.log, "compost", name);
+    }
+  }
+  /**
+   * Return number of dives in The Heap
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of dives
+   */
+  static dives({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const heap = page.match(/<b>The Heap:(.*?)<\/blockquote>/);
+      const heapLog = heap ? heap[1].toString() : "";
+      return flexibleTurns(heapLog, "treasure", name);
+    } else {
+      return flexibleTurns(this.log, "treasure", name);
+    }
+  }
+  /**
+   * Return number of defeats in The Heap
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of defeats
+   */
+  static defeats({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const heap = page.match(/<b>The Heap:(.*?)<\/blockquote>/);
+      const heapLog = heap ? heap[1].toString() : "";
+      return flexibleTurns(heapLog, "defeated by Stench", name);
+    } else {
+      return flexibleTurns(this.log, "defeated by Stench", name);
+    }
+  }
 }
 
 export class PLDistrict {
   static log = pldLog;
   static turns = getTotalTurns(this.log);
   static playerTable = getHoboRunners(this.log);
+
+  /**
+   * Return number of kills in The Purple Light District
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of kills
+   */
+  static kills({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const pld = page.match(/<b>The Purple Light District:(.*?)<\/blockquote>/);
+      const pldLog = pld ? pld[1].toString() : "";
+      return flexibleTurns(pldLog, "defeated Sleaze hobo", name);
+    } else {
+      return flexibleTurns(this.log, "defeated Sleaze hobo", name);
+    }
+  }
+  /**
+   * Return number of flimflams in The Purple Light District
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of flimflams
+   */
+  static flimflams({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const pld = page.match(/<b>The Purple Light District:(.*?)<\/blockquote>/);
+      const pldLog = pld ? pld[1].toString() : "";
+      return flexibleTurns(pldLog, "flimflammed", name);
+    } else {
+      return flexibleTurns(this.log, "flimflammed", name);
+    }
+  }
+  /**
+   * Return number of barfights in The Purple Light District
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of barfights
+   */
+  static barfights({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const pld = page.match(/<b>The Purple Light District:(.*?)<\/blockquote>/);
+      const pldLog = pld ? pld[1].toString() : "";
+      return flexibleTurns(pldLog, "barfight", name);
+    } else {
+      return flexibleTurns(this.log, "barfight", name);
+    }
+  }
+  /**
+   * Return number of bamboozles in The Purple Light District
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of bamboozles
+   */
+  static bamboozles({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const pld = page.match(/<b>The Purple Light District:(.*?)<\/blockquote>/);
+      const pldLog = pld ? pld[1].toString() : "";
+      return flexibleTurns(pldLog, "bamboozled", name);
+    } else {
+      return flexibleTurns(this.log, "bamboozled", name);
+    }
+  }
+  /**
+   * Return number of fights won against Chester in The Purple Light District
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of chesterwin
+   */
+  static chesterwin({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const pld = page.match(/<b>The Purple Light District:(.*?)<\/blockquote>/);
+      const pldLog = pld ? pld[1].toString() : "";
+      return flexibleTurns(pldLog, "defeated Chester", name);
+    } else {
+      return flexibleTurns(this.log, "defeated Chester", name);
+    }
+  }
+  /**
+   * Return number of losses to Chester in The Purple Light District
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of chesterlose
+   */
+  static chesterlose({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const pld = page.match(/<b>The Purple Light District:(.*?)<\/blockquote>/);
+      const pldLog = pld ? pld[1].toString() : "";
+      return flexibleTurns(pldLog, "defeated by Chester", name);
+    } else {
+      return flexibleTurns(this.log, "defeated by Chester", name);
+    }
+  }
+  /**
+   * Return number of dances in The Purple Light District
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of dances
+   */
+  static dances({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const pld = page.match(/<b>The Purple Light District:(.*?)<\/blockquote>/);
+      const pldLog = pld ? pld[1].toString() : "";
+      return flexibleTurns(pldLog, "danced", name);
+    } else {
+      return flexibleTurns(this.log, "danced", name);
+    }
+  }
 }
 
 export class BurialGround {
@@ -194,6 +401,13 @@ export class BurialGround {
     }
   }
 
+  /**
+   * Return number of defeats in Ancient Hobo Burial Ground
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of defeats
+   */
   static defeats({ cache = true, name }: { cache?: boolean; name?: string }): number {
     if (!cache) {
       const page = visitUrl("clan_raidlogs.php");
@@ -329,3 +543,16 @@ export class Sewers {
     }
   }
 }
+/*
+abstract class RaidLog {
+  private Dungeon dungeon;
+  private string image;
+  private Player[] players;
+  constructor(dungeon: Dungeon) {
+    this.dungeon = dungeon;
+    this.image = visitUrl("clan_raidlog.php");
+    this.players = [];
+  }
+}
+
+export class HobopolisLog extends RaidLog {} */

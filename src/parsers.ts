@@ -1,5 +1,14 @@
 import { print, visitUrl } from "kolmafia";
 import { Kmail } from "libram";
+import {
+  BurialGround,
+  Burnbarrel,
+  Esplanade,
+  Heap,
+  PLDistrict,
+  Sewers,
+  TownSquare,
+} from "./sidezones";
 
 export const getTurns = /\((\d+) turns?\)/m;
 export const getName = /([\w\s_]+) \(#(\d+)\)/m;
@@ -122,11 +131,12 @@ export function getHoboRunners(raidlog: string): Map<string, number> {
     }
   });
   // logging and sanity check
+  /*
   print(`Today's runners are:`);
   for (const key of playerTable.keys()) {
     print(`${key}`);
   }
-
+*/
   return playerTable;
 }
 
@@ -162,7 +172,8 @@ function formatDateString(kmail: Kmail): string {
 // finds the kmail from bosskiller, given playername and date in YYYYMMDD format
 // TODO: handle consumables and skill/other drops separately
 // TODO: map to file a JSON representation of values
-function bkDropsUpdate(bk: string, date: string) {
+
+export function bkDropsUpdate(bk: string, date: string) {
   const inbox = Kmail.inbox();
   inbox.forEach((kmail) => {
     const name = kmail.senderName;
@@ -195,4 +206,16 @@ export function esplanade(): void {
   }
 
   print(`${pipesBroken()}`);
+}
+
+export function totalHoboTurns() {
+  let turns = 0;
+  turns += Sewers.turns;
+  turns += Burnbarrel.turns;
+  turns += Esplanade.turns;
+  turns += Heap.turns;
+  turns += PLDistrict.turns;
+  turns += BurialGround.turns;
+  turns += TownSquare.turns;
+  return turns;
 }
