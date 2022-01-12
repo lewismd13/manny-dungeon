@@ -118,53 +118,164 @@ export class Esplanade {
   }
 }
 
-/*
-theMatcher["BB","&nbsp;Hot Hobo"] = "defeated  Hot hobo";
-theMatcher["BB","Defeats"] = "defeated by  Hot";
-theMatcher["BB","!Ol' Scratch"] = "defeated  Ol";
-theMatcher["BB","!bossloss"] = "defeated by  Ol";
-theMatcher["BB","Threw Tire"] = "on the fire";
-theMatcher["BB","Tirevalanche"] = "tirevalanche";
-theMatcher["BB","Diverted<br>Steam"] = "diverted some steam away";
-theMatcher["BB","Opened<br>Door"] = "clan coffer";
-theMatcher["BB","Burned<br>by Door"] = "hot door";
-*/
-
 export class Burnbarrel {
   static log = burnbarrelLog;
   static turns = getTotalTurns(this.log);
   static playerTable = getHoboRunners(this.log);
   static status = "";
-
-  static tiresStacked(name?: string): number {
-    if (!name) return getActionTurns(this.log, "on the fire");
-    else return getPlayerTurns(this.log, name, "on the fire");
+  /**
+   * Return number of kills in Burnbarrel Blvd
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of kills
+   */
+  static kills({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const burnbarrel = page.match(/<b>Burnbarrel Blvd.:(.*?)<\/blockquote>/);
+      const burnbarrelLog = burnbarrel ? burnbarrel[1].toString() : "";
+      return flexibleTurns(burnbarrelLog, "defeated  Hot hobo", name);
+    } else {
+      return flexibleTurns(this.log, "defeated  Hot hobo", name);
+    }
   }
-  static tirevalanches(name?: string): number {
-    if (!name) return getActionTurns(this.log, "tirevalanche");
-    else return getPlayerTurns(this.log, name, "tirevalanche");
+  /**
+   * Return number of defeats in Burnbarrel Blvd
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of defeats
+   */
+  static defeats({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const burnbarrel = page.match(/<b>Burnbarrel Blvd.:(.*?)<\/blockquote>/);
+      const burnbarrelLog = burnbarrel ? burnbarrel[1].toString() : "";
+      return flexibleTurns(burnbarrelLog, "defeated by Hot", name);
+    } else {
+      return flexibleTurns(this.log, "defeated by Hot", name);
+    }
   }
-  static bbDefeats(name?: string): number {
-    if (!name) return getActionTurns(this.log, "defeated by  Hot hobo");
-    else return getPlayerTurns(this.log, name, "defeated by  Hot hobo");
+  /**
+   * Return number of scratchlose in Burnbarrel Blvd
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of scratchlose
+   */
+  static scratchlose({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const burnbarrel = page.match(/<b>Burnbarrel Blvd.:(.*?)<\/blockquote>/);
+      const burnbarrelLog = burnbarrel ? burnbarrel[1].toString() : "";
+      return flexibleTurns(burnbarrelLog, "defeated by Ol", name);
+    } else {
+      return flexibleTurns(this.log, "defeated by Ol", name);
+    }
   }
-  static bbKills(name?: string): number {
-    if (!name) return getActionTurns(this.log, "defeated  Hot hobo");
-    else return getPlayerTurns(this.log, name, "defeated  Hot hobo");
+  /**
+   * Return number of scratchwin in Burnbarrel Blvd
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of scratchwin
+   */
+  static scratchwin({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const burnbarrel = page.match(/<b>Burnbarrel Blvd.:(.*?)<\/blockquote>/);
+      const burnbarrelLog = burnbarrel ? burnbarrel[1].toString() : "";
+      return flexibleTurns(burnbarrelLog, "defeated Ol", name);
+    } else {
+      return flexibleTurns(this.log, "defeated Ol", name);
+    }
   }
-  static steam(name?: string): number {
-    if (!name) return getActionTurns(this.log, "diverted some steam");
-    else return getPlayerTurns(this.log, name, "diverted some steam");
+  /**
+   * Return number of tires in Burnbarrel Blvd
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of tires
+   */
+  static tires({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const burnbarrel = page.match(/<b>Burnbarrel Blvd.:(.*?)<\/blockquote>/);
+      const burnbarrelLog = burnbarrel ? burnbarrel[1].toString() : "";
+      return flexibleTurns(burnbarrelLog, "on the fire", name);
+    } else {
+      return flexibleTurns(this.log, "on the fire", name);
+    }
   }
-  static doors(name?: string): number {
-    if (!name) return getActionTurns(this.log, "Meat for the clan");
-    else return getPlayerTurns(this.log, name, "Meat for the clan");
+  /**
+   * Return number of tirevalanches in Burnbarrel Blvd
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of tirevalanches
+   */
+  static tirevalanches({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const burnbarrel = page.match(/<b>Burnbarrel Blvd.:(.*?)<\/blockquote>/);
+      const burnbarrelLog = burnbarrel ? burnbarrel[1].toString() : "";
+      return flexibleTurns(burnbarrelLog, "tirevalanche", name);
+    } else {
+      return flexibleTurns(this.log, "tirevalanche", name);
+    }
   }
-  static scratchDefeats(name?: string): number {
-    if (!name) return getActionTurns(this.log, "defeated by  Ol' Scratch");
-    else return getPlayerTurns(this.log, name, "defeated by  Ol' Scratch");
+  /**
+   * Return number of diverts in Burnbarrel Blvd
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of diverts
+   */
+  static diverts({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const burnbarrel = page.match(/<b>Burnbarrel Blvd.:(.*?)<\/blockquote>/);
+      const burnbarrelLog = burnbarrel ? burnbarrel[1].toString() : "";
+      return flexibleTurns(burnbarrelLog, "diverted some steam", name);
+    } else {
+      return flexibleTurns(this.log, "diverted some steam", name);
+    }
   }
-  // burned by door, scratch kills
+  /**
+   * Return number of coffers in Burnbarrel Blvd
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of coffers
+   */
+  static coffers({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const burnbarrel = page.match(/<b>Burnbarrel Blvd.:(.*?)<\/blockquote>/);
+      const burnbarrelLog = burnbarrel ? burnbarrel[1].toString() : "";
+      return flexibleTurns(burnbarrelLog, "clan coffer", name);
+    } else {
+      return flexibleTurns(this.log, "clan coffer", name);
+    }
+  }
+  /**
+   * Return number of doors in Burnbarrel Blvd
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of doors
+   */
+  static doors({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const burnbarrel = page.match(/<b>Burnbarrel Blvd.:(.*?)<\/blockquote>/);
+      const burnbarrelLog = burnbarrel ? burnbarrel[1].toString() : "";
+      return flexibleTurns(burnbarrelLog, "hot door", name);
+    } else {
+      return flexibleTurns(this.log, "hot door", name);
+    }
+  }
 }
 
 export class Heap {
@@ -390,6 +501,13 @@ export class BurialGround {
   static turns = getTotalTurns(this.log);
   static playerTable = getHoboRunners(this.log);
 
+  /**
+   * Return number of kills in Ancient Hobo Burial Ground
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of kills
+   */
   static kills({ cache = true, name }: { cache?: boolean; name?: string }): number {
     if (!cache) {
       const page = visitUrl("clan_raidlogs.php");
@@ -419,6 +537,13 @@ export class BurialGround {
     }
   }
 
+  /**
+   * Return number of moves busted in Ancient Hobo Burial Ground
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of busted moves
+   */
   static dances({ cache = true, name }: { cache?: boolean; name?: string }): number {
     if (!cache) {
       const page = visitUrl("clan_raidlogs.php");
@@ -430,6 +555,13 @@ export class BurialGround {
     }
   }
 
+  /**
+   * Return number of flowers sent in Ancient Hobo Burial Ground
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of flowers sent
+   */
   static flowers({ cache = true, name }: { cache?: boolean; name?: string }): number {
     if (!cache) {
       const page = visitUrl("clan_raidlogs.php");
@@ -441,6 +573,13 @@ export class BurialGround {
     }
   }
 
+  /**
+   * Return number of dancers watched in Ancient Hobo Burial Ground
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of dancers watched
+   */
   static watchedDancers({ cache = true, name }: { cache?: boolean; name?: string }): number {
     if (!cache) {
       const page = visitUrl("clan_raidlogs.php");
