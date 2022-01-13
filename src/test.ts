@@ -1,13 +1,10 @@
-/*
-const testMap = new Map();
-testMap.set($item`Angry Farmer candy`, 1);
-testMap.set($item`bottle of gin`, 2);
+import { Burnbarrel, Sewers } from "./sidezones";
+import { print } from "kolmafia";
 
-Kmail.send("Manendra", "hi, dude", testMap);
-*/
+print(
+  `donutine currently has ${Burnbarrel.tires({
+    name: "donutine",
+  })} tires at BB and ${Burnbarrel.kills({ name: "donutine" })} kills`
+);
 
-import { getPlayerId, print } from "kolmafia";
-
-const justId = parseInt(getPlayerId("soxfan196o"));
-
-print(`soxfan's player ID is ${justId}`);
+print(`in the sewers, newfi cheese wasted ${Sewers.kills("newfi cheese")} turns killing mobs`);
