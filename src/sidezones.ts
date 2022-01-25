@@ -496,6 +496,51 @@ export class PLDistrict {
   }
 }
 
+export class Richard {
+  static log = visitUrl("clan_hobopolis.php?place=3&action=talkrichard&whichtalk=3");
+
+  static hot(): number {
+    return partsMatching(
+      visitUrl("clan_hobopolis.php?place=3&action=talkrichard&whichtalk=3"),
+      "boot"
+    );
+  }
+
+  static cold(): number {
+    return partsMatching(
+      visitUrl("clan_hobopolis.php?place=3&action=talkrichard&whichtalk=3"),
+      "eye"
+    );
+  }
+
+  static sleaze(): number {
+    return partsMatching(
+      visitUrl("clan_hobopolis.php?place=3&action=talkrichard&whichtalk=3"),
+      "crotch"
+    );
+  }
+
+  static stench(): number {
+    return partsMatching(
+      visitUrl("clan_hobopolis.php?place=3&action=talkrichard&whichtalk=3"),
+      "guts"
+    );
+  }
+
+  static spooky(): number {
+    return partsMatching(
+      visitUrl("clan_hobopolis.php?place=3&action=talkrichard&whichtalk=3"),
+      "skull"
+    );
+  }
+
+  static physical(): number {
+    return partsMatching(
+      visitUrl("clan_hobopolis.php?place=3&action=talkrichard&whichtalk=3"),
+      "skin"
+    );
+  }
+}
 export class BurialGround {
   static log = ahbgLog;
   static turns = getTotalTurns(this.log);
@@ -531,9 +576,45 @@ export class BurialGround {
       const page = visitUrl("clan_raidlogs.php");
       const ahbg = page.match(/<b>The Ancient Hobo Burial Ground:(.*?)<\/blockquote>/);
       const ahbgLog = ahbg ? ahbg[1].toString() : "";
-      return flexibleTurns(ahbgLog, "defeated by", name);
+      return flexibleTurns(ahbgLog, "defeated by  Spooky", name);
     } else {
-      return flexibleTurns(this.log, "defeated by", name);
+      return flexibleTurns(this.log, "defeated by  Spooky", name);
+    }
+  }
+
+  /**
+   * Return number of boss kills in Ancient Hobo Burial Ground
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of kills
+   */
+  static bossKills({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const ahbg = page.match(/<b>The Ancient Hobo Burial Ground:(.*?)<\/blockquote>/);
+      const ahbgLog = ahbg ? ahbg[1].toString() : "";
+      return flexibleTurns(ahbgLog, "defeated Zombo", name);
+    } else {
+      return flexibleTurns(this.log, "defeated Zombo", name);
+    }
+  }
+
+  /**
+   * Return number of boss defeats in Ancient Hobo Burial Ground
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of defeats
+   */
+  static bossDefeats({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const ahbg = page.match(/<b>The Ancient Hobo Burial Ground:(.*?)<\/blockquote>/);
+      const ahbgLog = ahbg ? ahbg[1].toString() : "";
+      return flexibleTurns(ahbgLog, "defeated by Zombo", name);
+    } else {
+      return flexibleTurns(this.log, "defeated by Zombo", name);
     }
   }
 
@@ -592,16 +673,16 @@ export class BurialGround {
   }
   // pry open door
   // semirare
-  // killed zombo
-  // killed by zombo
 }
 
 export class TownSquare {
   static log = tsLog;
   static turns = getTotalTurns(this.log);
   static playerTable = getHoboRunners(this.log);
-}
 
+  // need tent open function, need to go fuck around and see what the page says
+}
+/*
 export class Richard {
   static log = visitUrl("clan_hobopolis.php?place=3&action=talkrichard&whichtalk=3");
   static hot = partsMatching(this.log, "boot");
@@ -611,11 +692,21 @@ export class Richard {
   static spooky = partsMatching(this.log, "skull");
   static physical = partsMatching(this.log, "skin");
 }
+*/
 
 export class Sewers {
   static log = sewerLog;
   static turns = getTotalTurns(this.log);
   static playerTable = getHoboRunners(this.log);
+
+  /**
+   *
+   * @returns returns true if your character has cleared the sewers
+   */
+  static cleared(): boolean {
+    if (visitUrl("clan_hobopolis.php").includes("deeper.gif")) return true;
+    else return false;
+  }
 
   static kills(name?: string): number {
     if (!name) return getActionTurns(this.log, "defeated a");
