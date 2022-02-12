@@ -173,7 +173,7 @@ function formatDateString(kmail: Kmail): string {
 // TODO: handle consumables and skill/other drops separately
 // TODO: map to file a JSON representation of values
 
-export function bkDropsUpdate(bk: string, date: string) {
+export function bkDropsUpdate(bk: string, date: string): void {
   const inbox = Kmail.inbox();
   inbox.forEach((kmail) => {
     const name = kmail.senderName;
@@ -208,7 +208,7 @@ export function esplanade(): void {
   print(`${pipesBroken()}`);
 }
 
-export function totalHoboTurns() {
+export function totalHoboTurns(): number {
   let turns = 0;
   turns += Sewers.turns;
   turns += Burnbarrel.turns;

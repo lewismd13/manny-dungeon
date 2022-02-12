@@ -105,12 +105,15 @@ export class Esplanade {
   static turns = getTotalTurns(this.log);
   static playerTable = getHoboRunners(this.log);
 
-  static totalPipes = getActionTurns(esplanadeLog, "pipe");
-  static totalDiverts = getActionTurns(esplanadeLog, "divert");
-  static bigYodels = getActionTurns(esplanadeLog, "yodeled like crazy");
-  static totalDefeats = getActionTurns(esplanadeLog, "defeated by");
-  static totalKills = getActionTurns(esplanadeLog, "defeated  Cold hobo");
-  static totalBanquets = getActionTurns(esplanadeLog, "raided");
+  /**
+   * Returns Exposure Esplanade progress based on location image, ie image7 returns 70
+   */
+  static progress(): number {
+    const page = visitUrl("clan_hobopolis.php?place=5");
+    const matcher = page.match(/hobopolis\/exposureesplanade(\d\d?).gif/);
+    const progress = matcher ? parseInt(matcher[1]) : 0;
+    return progress * 10;
+  }
 
   static pipesMethod(name?: string): number {
     if (!name) return getActionTurns(this.log, "pipe");
@@ -276,12 +279,32 @@ export class Burnbarrel {
       return flexibleTurns(this.log, "hot door", name);
     }
   }
+
+  /**
+   * Returns the BB progress based on location image, ie image7 returns 70
+   */
+  static progress(): number {
+    const page = visitUrl("clan_hobopolis.php?place=4");
+    const matcher = page.match(/hobopolis\/burnbarrelblvd(\d\d?).gif/);
+    const progress = matcher ? parseInt(matcher[1]) : 0;
+    return progress * 10;
+  }
 }
 
 export class Heap {
   static log = heapLog;
   static turns = getTotalTurns(this.log);
   static playerTable = getHoboRunners(this.log);
+
+  /**
+   * Returns the Heap progress based on location image, ie image7 returns 70
+   */
+  static progress(): number {
+    const page = visitUrl("clan_hobopolis.php?place=6");
+    const matcher = page.match(/hobopolis\/theheap(\d\d?).gif/);
+    const progress = matcher ? parseInt(matcher[1]) : 0;
+    return progress * 10;
+  }
 
   /**
    * Return number of kills in The Heap
@@ -374,6 +397,16 @@ export class PLDistrict {
   static log = pldLog;
   static turns = getTotalTurns(this.log);
   static playerTable = getHoboRunners(this.log);
+
+  /**
+   * Returns Purple Light District progress based on location image, ie image7 returns 70
+   */
+  static progress(): number {
+    const page = visitUrl("clan_hobopolis.php?place=8");
+    const matcher = page.match(/hobopolis\/purplelightdistrict(\d\d?).gif/);
+    const progress = matcher ? parseInt(matcher[1]) : 0;
+    return progress * 10;
+  }
 
   /**
    * Return number of kills in The Purple Light District
@@ -547,6 +580,16 @@ export class BurialGround {
   static playerTable = getHoboRunners(this.log);
 
   /**
+   * Returns Burial Ground progress based on location image, ie image7 returns 70
+   */
+  static progress(): number {
+    const page = visitUrl("clan_hobopolis.php?place=7");
+    const matcher = page.match(/hobopolis\/burialground(\d\d?).gif/);
+    const progress = matcher ? parseInt(matcher[1]) : 0;
+    return progress * 10;
+  }
+
+  /**
    * Return number of kills in Ancient Hobo Burial Ground
    *
    * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
@@ -680,8 +723,30 @@ export class TownSquare {
   static turns = getTotalTurns(this.log);
   static playerTable = getHoboRunners(this.log);
 
-  // need tent open function, need to go fuck around and see what the page says
+  /**
+   * Returns Town Square progress based on location image, ie image7 returns 70
+   */
+  static progress(): number {
+    const page = visitUrl("clan_hobopolis.php?place=2");
+    const matcher = page.match(/hobopolis\/townsquare(\d\d?)o?.gif/);
+    const progress = matcher ? parseInt(matcher[1]) : 0;
+    return progress * 10; // this is wrong. hilariously so.
+  }
+
+  /**
+   * Returns whether or not the tent is open in town square as a boolean, true for open, false for closed
+   */
+  static tentOpen(): boolean {
+    const page = visitUrl("clan_hobopolis.php?place=2");
+    const matcher = page.match(/hobopolis\/townsquare\d\d?(o?).gif/);
+    const tentStatus = matcher;
+    if (tentStatus) return true;
+    else return false;
+  }
 }
+
+// need tent open function, need to go fuck around and see what the page says
+
 /*
 export class Richard {
   static log = visitUrl("clan_hobopolis.php?place=3&action=talkrichard&whichtalk=3");

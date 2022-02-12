@@ -8,7 +8,6 @@ import {
   setAutoAttack,
   setProperty,
   useFamiliar,
-  userPrompt,
   useSkill,
 } from "kolmafia";
 import {
@@ -24,9 +23,9 @@ import {
   Macro,
   SongBoom,
 } from "libram";
-import { Burnbarrel, Richard, Sewers } from "./sidezones";
+import { Richard, Sewers } from "./sidezones";
 
-function setChoice(adv: number, choice: number) {
+export function setChoice(adv: number, choice: number): void {
   setProperty(`choiceAdventure${adv}`, `${choice}`);
 }
 
@@ -174,7 +173,7 @@ if (SongBoom.song() !== "Food Vibrations") SongBoom.setSong("Food Vibrations");
 useFamiliar($familiar`Red-Nosed Snapper`);
 if (Snapper.getTrackedPhylum() !== $phylum`hobo`) Snapper.trackPhylum($phylum`hobo`);
 */
-townSquare(35);
+townSquare(75);
 
 print(`Skins: ${Richard.physical()}`);
 print(`Boots: ${Richard.hot()}`);
@@ -187,10 +186,11 @@ print();
 print(`I hope those numbers are all greater than or equal to 35`);
 
 setProperty("afterAdventureScript", "");
-
+/*
 function burnbarrel() {
   let tires;
   if (Burnbarrel.tires({}) > 0 && Burnbarrel.tirevalanches({}) > 0) {
     tires = userPrompt("How many tires on the stack?");
   } else tires = Burnbarrel.tires({});
 }
+*/
