@@ -1,16 +1,24 @@
 import { print } from "kolmafia";
 // heap
 const thing = new Map([
-  ["zombokills", "defeated  Zombo"],
-  ["zombodefeats", "defeated by  Zombo"],
-  ["raided tombs", "raided"],
-  ["failed dances", "failed to impress"],
+  ["banquets", "freezer"],
+  ["littleYodels", "yodeled a little"],
+  ["mediumYodels", "yodeled quite a bit"],
+  ["bigYodels", "yodeled like crazy"],
+  ["fridges", "fridge"],
+  ["purpleLightDiverts", "cold water out"],
+  ["burnbarrelDiverts", "cold water to"],
+  ["pipes", "broke"],
+  ["kills", "defeated  Cold"],
+  ["defeats", "defeated by  Cold"],
+  ["frostyDefeats", "defeated by Frosty"],
+  ["frostyKill", "defeated Frosty"],
 ]);
 
 for (const name of thing.keys()) {
-  const zone = "burnbarrel";
+  const zone = "esplanade";
   print(`/**`);
-  print(`* Return number of ${name} in Burnbarrel Blvd`);
+  print(`* Return number of ${name} in Exposure Esplanade`);
   print(`*`);
   print(
     `* @param {boolean} [cache=True] Use cached log or refresh log each time function is called`
@@ -21,7 +29,7 @@ for (const name of thing.keys()) {
   print(`static ${name}({ cache = true, name }: { cache?: boolean; name?: string }): number {`);
   print(`if (!cache) {`);
   print(`const page = visitUrl("clan_raidlogs.php");`);
-  print(`const ${zone} = page.match(/<b>Burnbarrel Blvd.:(.*?)<\\/blockquote>/);`);
+  print(`const ${zone} = page.match(/<b>Exposure Esplanade:(.*?)<\\/blockquote>/);`);
   print(`const ${zone}Log = ${zone} ? ${zone}[1].toString() : "";`);
   print(`return flexibleTurns(${zone}Log, "${thing.get(name)}", name);`);
   print(`} else {       return flexibleTurns(this.log, "${thing.get(name)}", name);     } }`);

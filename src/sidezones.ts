@@ -85,21 +85,6 @@ export function getTotalTurns(clanLog: string): number {
   }
   return totalTurns;
 }
-/*
-export class Sidezone {
-  logs: Map<string, string>;
-  turns: number;
-  playerTable: Map<string, number>;
-  constructor(log: string, turns: number, playerTable: Map<string, number>) {
-    this.logs = log;
-    this.turns = turns;
-    this.playerTable = playerTable;
-  }
-  static totalTurns(log): number {
-    return getTotalTurns()
-  }
-}
-*/
 export class Esplanade {
   static log = esplanadeLog;
   static turns = getTotalTurns(this.log);
@@ -118,6 +103,211 @@ export class Esplanade {
   static pipesMethod(name?: string): number {
     if (!name) return getActionTurns(this.log, "pipe");
     else return getPlayerTurns(this.log, name, "pipe");
+  }
+
+  /**
+   * Return number of banquets in Exposure Esplanade
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of banquets
+   */
+  static banquets({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const esplanade = page.match(/<b>Exposure Esplanade:(.*?)<\/blockquote>/);
+      const esplanadeLog = esplanade ? esplanade[1].toString() : "";
+      return flexibleTurns(esplanadeLog, "freezer", name);
+    } else {
+      return flexibleTurns(this.log, "freezer", name);
+    }
+  }
+  /**
+   * Return number of littleYodels in Exposure Esplanade
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of littleYodels
+   */
+  static littleYodels({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const esplanade = page.match(/<b>Exposure Esplanade:(.*?)<\/blockquote>/);
+      const esplanadeLog = esplanade ? esplanade[1].toString() : "";
+      return flexibleTurns(esplanadeLog, "yodeled a little", name);
+    } else {
+      return flexibleTurns(this.log, "yodeled a little", name);
+    }
+  }
+  /**
+   * Return number of mediumYodels in Exposure Esplanade
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of mediumYodels
+   */
+  static mediumYodels({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const esplanade = page.match(/<b>Exposure Esplanade:(.*?)<\/blockquote>/);
+      const esplanadeLog = esplanade ? esplanade[1].toString() : "";
+      return flexibleTurns(esplanadeLog, "yodeled quite a bit", name);
+    } else {
+      return flexibleTurns(this.log, "yodeled quite a bit", name);
+    }
+  }
+  /**
+   * Return number of bigYodels in Exposure Esplanade
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of bigYodels
+   */
+  static bigYodels({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const esplanade = page.match(/<b>Exposure Esplanade:(.*?)<\/blockquote>/);
+      const esplanadeLog = esplanade ? esplanade[1].toString() : "";
+      return flexibleTurns(esplanadeLog, "yodeled like crazy", name);
+    } else {
+      return flexibleTurns(this.log, "yodeled like crazy", name);
+    }
+  }
+  /**
+   * Return number of fridges in Exposure Esplanade
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of fridges
+   */
+  static fridges({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const esplanade = page.match(/<b>Exposure Esplanade:(.*?)<\/blockquote>/);
+      const esplanadeLog = esplanade ? esplanade[1].toString() : "";
+      return flexibleTurns(esplanadeLog, "fridge", name);
+    } else {
+      return flexibleTurns(this.log, "fridge", name);
+    }
+  }
+  /**
+   * Return number of purpleLightDiverts in Exposure Esplanade
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of purpleLightDiverts
+   */
+  static purpleLightDiverts({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const esplanade = page.match(/<b>Exposure Esplanade:(.*?)<\/blockquote>/);
+      const esplanadeLog = esplanade ? esplanade[1].toString() : "";
+      return flexibleTurns(esplanadeLog, "cold water out", name);
+    } else {
+      return flexibleTurns(this.log, "cold water out", name);
+    }
+  }
+  /**
+   * Return number of burnbarrelDiverts in Exposure Esplanade
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of burnbarrelDiverts
+   */
+  static burnbarrelDiverts({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const esplanade = page.match(/<b>Exposure Esplanade:(.*?)<\/blockquote>/);
+      const esplanadeLog = esplanade ? esplanade[1].toString() : "";
+      return flexibleTurns(esplanadeLog, "cold water to", name);
+    } else {
+      return flexibleTurns(this.log, "cold water to", name);
+    }
+  }
+  /**
+   * Return number of pipes in Exposure Esplanade
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of pipes
+   */
+  static pipes({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const esplanade = page.match(/<b>Exposure Esplanade:(.*?)<\/blockquote>/);
+      const esplanadeLog = esplanade ? esplanade[1].toString() : "";
+      return flexibleTurns(esplanadeLog, "broke", name);
+    } else {
+      return flexibleTurns(this.log, "broke", name);
+    }
+  }
+  /**
+   * Return number of kills in Exposure Esplanade
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of kills
+   */
+  static kills({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const esplanade = page.match(/<b>Exposure Esplanade:(.*?)<\/blockquote>/);
+      const esplanadeLog = esplanade ? esplanade[1].toString() : "";
+      return flexibleTurns(esplanadeLog, "defeated Cold", name);
+    } else {
+      return flexibleTurns(this.log, "defeated Cold", name);
+    }
+  }
+  /**
+   * Return number of defeats in Exposure Esplanade
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of defeats
+   */
+  static defeats({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const esplanade = page.match(/<b>Exposure Esplanade:(.*?)<\/blockquote>/);
+      const esplanadeLog = esplanade ? esplanade[1].toString() : "";
+      return flexibleTurns(esplanadeLog, "defeated by Cold", name);
+    } else {
+      return flexibleTurns(this.log, "defeated by Cold", name);
+    }
+  }
+  /**
+   * Return number of frostyDefeats in Exposure Esplanade
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of frostyDefeats
+   */
+  static frostyDefeats({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const esplanade = page.match(/<b>Exposure Esplanade:(.*?)<\/blockquote>/);
+      const esplanadeLog = esplanade ? esplanade[1].toString() : "";
+      return flexibleTurns(esplanadeLog, "defeated by Frosty", name);
+    } else {
+      return flexibleTurns(this.log, "defeated by Frosty", name);
+    }
+  }
+  /**
+   * Return number of frostyKill in Exposure Esplanade
+   *
+   * @param {boolean} [cache=True] Use cached log or refresh log each time function is called
+   * @param {string} [name] Playername to search for
+   * @returns {number} Number of frostyKill
+   */
+  static frostyKill({ cache = true, name }: { cache?: boolean; name?: string }): number {
+    if (!cache) {
+      const page = visitUrl("clan_raidlogs.php");
+      const esplanade = page.match(/<b>Exposure Esplanade:(.*?)<\/blockquote>/);
+      const esplanadeLog = esplanade ? esplanade[1].toString() : "";
+      return flexibleTurns(esplanadeLog, "defeated Frosty", name);
+    } else {
+      return flexibleTurns(this.log, "defeated Frosty", name);
+    }
   }
 }
 
